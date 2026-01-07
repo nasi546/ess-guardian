@@ -1,0 +1,3 @@
+
+SUBSYSTEM=="i2c-dev", KERNEL=="i2c-9", SYMLINK+="cam_thermal"
+SUBSYSTEM=="i2c-dev", KERNEL=="i2c-9", SYMLINK+="ess_thermal_i2c"

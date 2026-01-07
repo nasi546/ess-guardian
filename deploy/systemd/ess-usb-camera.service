@@ -1,0 +1,28 @@
+[Unit]
+Description=ESS USB Camera ROS2 Publisher (by-id fixed)
+After=systemd-udevd.service
+Wants=systemd-udevd.service
+ConditionPathExists=/dev/v4l/by-id/usb-Sonix_Technology_Co.__Ltd._USB_2.0_Camera_SN0001-video-index0
+
+[Service]
+Type=simple
+User=ros
+
+# ROS2 / DDS env
+Environment=ROS_DOMAIN_ID=37
+Environment=RMW_IMPLEMENTATION=rmw_fastrtps_cpp
+Environment=FASTDDS_BUILTIN_TRANSPORTS=UDPv4
+Environment=ROS2CLI_DISABLE_DAEMON=1
+
+# wait until the capture node appears (max 20s)
+ExecStartPre=/bin/bash -lc 'CAM=/dev/v4l/by-id/usb-Sonix_Technology_Co.__Ltd._USB_2.0_Camera_SN0001-video-index0; for i in {1..80}; do [ -e "$CAM" ] && exit 0; sleep 0.25; done; echo "[ERR] $CAM not found"; exit 1'
+
+ExecStart=/bin/bash -lc 'source /opt/ros/humble/setup.bash; exec ros2 run v4l2_camera v4l2_camera_node --ros-args -r __node:=v4l2_camera0 -p video_device:=/dev/v4l/by-id/usb-Sonix_Technology_Co.__Ltd._USB_2.0_Camera_SN0001-video-index0 -p image_size:="[640,480]" -p pixel_format:=YUYV -p output_encoding:=bgr8 -r image_raw:=/camera/image_raw -r camera_info:=/camera/camera_info'
+
+Restart=on-failure
+RestartSec=2
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target

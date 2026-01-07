@@ -1,0 +1,8 @@
+<RCC>
+    <qresource prefix="/images">
+        <file>img/ess_map.jpg</file>
+        <file>img/ess_map.png</file>
+        <file>img/fan_off.jpg</file>
+        <file>img/fan_on.gif</file>
+    </qresource>
+</RCC>

@@ -1,0 +1,15 @@
+[Unit]
+Description=ESS I2C Environment Daemon (C version)
+After=network-online.target
+Wants=network-online.target
+StartLimitIntervalSec=60
+StartLimitBurst=5
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/flock -n /run/lock/ess-i2c-1.lock /opt/ess-guardian/current/bin/ess-env-daemon
+Restart=on-failure
+RestartSec=2
+[Install]
+WantedBy=multi-user.target
+

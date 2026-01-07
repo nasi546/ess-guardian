@@ -1,0 +1,3 @@
+# Sonix 0c45:1915 USB 2.0 Camera -> /dev/cam_rgb
+SUBSYSTEM=="video4linux", KERNEL=="video*", ATTRS{idVendor}=="0c45", ATTRS{idProduct}=="1915", \
+  SYMLINK+="cam_rgb", GROUP="video", MODE="0660"

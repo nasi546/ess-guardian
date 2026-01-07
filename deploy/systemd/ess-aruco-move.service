@@ -1,0 +1,28 @@
+[Unit]
+Description=ESS ArUco Move Node (infinite search -> DONE -> ack)
+After=network-online.target systemd-udevd.service
+Wants=network-online.target systemd-udevd.service
+After=ess-usb-camera.service
+Wants=ess-usb-camera.service
+
+[Service]
+Type=simple
+User=ros
+WorkingDirectory=/home/ros/2512_4th_proj_chanmi
+
+Environment=ROS_DOMAIN_ID=37
+Environment=RMW_IMPLEMENTATION=rmw_fastrtps_cpp
+Environment=FASTDDS_BUILTIN_TRANSPORTS=UDPv4
+Environment=ROS2CLI_DISABLE_DAEMON=1
+
+ExecStartPre=/bin/bash -lc 'mkdir -p /var/lib/ess_aruco/snaps'
+
+ExecStart=/bin/bash -lc 'source /opt/ros/humble/setup.bash && source /home/ros/2512_4th_proj_chanmi/install/setup.bash && exec ros2 run ess_aruco_move aruco_move_node --ros-args -p mode:=run -p continuous:=false -p search_until_done:=true -p search_when_lost:=true -p search_yaw:=0.20 -p search_flip_sec:=3.0 -p run_timeout_sec:=0.0 -p max_lin:=0.05 -p k_lin_m_per_scale:=0.12'
+
+Restart=on-failure
+RestartSec=2
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,25 @@
+[Unit]
+Description=ESS Thermal Writer (MLX90640 -> /var/log/ess-thermal-status.json)
+After=systemd-udevd.service
+Wants=systemd-udevd.service
+PartOf=ess.target
+
+[Service]
+Type=simple
+Environment=ESS_THERMAL_I2C_BUS=9
+Environment=ESS_THERM_HZ=5
+Environment=ESS_THERM_REFRESH=8HZ
+Environment=ESS_THERM_ROI_W=7
+Environment=ESS_THERM_ROI_H=20
+Environment=ESS_THERM_SNAPSHOT_ENABLE=1
+Environment=ESS_THERM_TOPK=3
+
+
+ExecStart=/opt/ess-guardian/current/thermal/venv/bin/python /opt/ess-guardian/current/thermal/ess_thermal_daemon.py
+Restart=on-failure
+RestartSec=2
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=ess.target

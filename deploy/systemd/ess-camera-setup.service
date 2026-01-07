@@ -1,0 +1,18 @@
+
+[Unit]
+Description=ESS Camera Setup Service (RGB V4L2)
+After=systemd-udevd.service
+Wants=systemd-udevd.service
+Before=ess-robot.service ess-vision.service
+PartOf=ess.target
+ConditionPathExists=/dev/cam_rgb
+
+[Service]
+Type=oneshot
+ExecStart=/bin/bash /opt/ess-guardian/current/scripts/ess-camera-setup.sh
+RemainAfterExit=yes
+Restart=on-failure
+RestartSec=2
+
+[Install]
+WantedBy=ess.target

@@ -1,0 +1,19 @@
+# /etc/systemd/system/ess.target
+[Unit]
+Description=ESS Bringup Target (camera/robot/aruco/env/thermal)
+Wants=local-fs.target systemd-udevd.service network-online.target time-sync.target
+After=local-fs.target systemd-udevd.service network-online.target time-sync.target
+
+# === ESS services you actually use ===
+Wants=ess-camera-setup.service
+Wants=ess-usb-camera.service
+Wants=ess-robot.service
+Wants=ess-aruco-move.service
+Wants=ess-env-daemon.service
+Wants=ess-thermal-writer.service
+Wants=ess-thermal-gate.service
+Wants=ess-thermal-check.service
+
+[Install]
+WantedBy=multi-user.target
+

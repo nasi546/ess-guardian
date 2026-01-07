@@ -1,0 +1,27 @@
+[Unit]
+Description=ESS TurtleBot3 Robot Bringup
+After=network-online.target
+Wants=network-online.target
+#부팅때 /dev늦게 나오는거 방지
+RequiresMountsFor=/home/ros
+
+StartLimitIntervalSec=60
+StartLimitBurst=5
+[Service]
+Type=simple
+User=ros
+Group=ros
+WorkingDirectory=/home/ros
+
+Environment=ROS_DOMAIN_ID=37
+Environment=RMW_IMPLEMENTATION=rmw_fastrtps_cpp
+
+ExecStart=/opt/ess-guardian/current/scripts/ess-robot-start.sh
+ExecStartPre=/bin/sh -c 'for i in $(seq 1 30); do [ -e /dev/ttyACM0 ] && exit 0; sleep 1; done; exit 1'
+
+
+Restart=on-failure
+RestartSec=2
+
+[Install]
+WantedBy=multi-user.target

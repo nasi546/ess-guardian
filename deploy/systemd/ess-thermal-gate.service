@@ -1,0 +1,37 @@
+[Unit]
+Description=ESS Thermal Gate (control->capture/events + MQTT minimal)
+After=network-online.target
+Wants=network-online.target
+PartOf=ess.target
+
+[Service]
+User=ros
+Group=ros
+Type=simple
+
+Environment=ROS_DOMAIN_ID=37
+Environment=RMW_IMPLEMENTATION=rmw_fastrtps_cpp
+
+Environment=ESS_MQTT_HOST=10.10.14.109
+Environment=ESS_MQTT_PORT=1883
+Environment=ESS_MQTT_CLIENT_ID=thermal_gate_control_robot_1
+Environment=ESS_MQTT_TOPIC_THERM=ess/thermal/alert
+Environment=ESS_MQTT_TOPIC_ALERT=ess/alert
+Environment=ESS_LOCATION=robot_1
+Environment=THERM_ALERT_COOLDOWN_SEC=0
+
+Environment=HOME=/root
+Environment=ROS_LOG_DIR=/var/log/ros
+
+Environment=ESS_THERM_CTRL_TOPIC=/ess/request/id
+Environment=ESS_THERM_CAP_TOPIC=/ess/thermal/ack
+Environment=ESS_THERM_EVT_TOPIC=/ess/thermal/events
+
+ExecStart=/bin/bash -c 'source /opt/ros/humble/setup.bash; exec /opt/ess-guardian/current/thermal/venv/bin/python /opt/ess-guardian/current/thermal/ess_thermal_gate_control.py'
+Restart=on-failure
+RestartSec=2
+KillSignal=SIGINT
+TimeoutStopSec=10
+
+[Install]
+WantedBy=ess.target
