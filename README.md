@@ -84,6 +84,7 @@
 <p>
   <img src="docs/assets/slides/hw-arch3.png" width="900">
 </p>
+
 ---
 
 ## Software Architecture
